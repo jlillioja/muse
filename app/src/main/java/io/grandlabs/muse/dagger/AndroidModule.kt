@@ -3,9 +3,7 @@ package io.grandlabs.muse.dagger
 import android.app.Application
 import dagger.Module
 import dagger.Provides
-import io.grandlabs.muse.NavigationController
-import io.grandlabs.muse.NavigationProvider
-import io.grandlabs.muse.Navigator
+import io.grandlabs.muse.*
 import javax.inject.Singleton
 
 @Module
@@ -23,6 +21,16 @@ class AndroidModule(private val application: Application) {
     @Singleton
     fun provideNavigationController(): NavigationController {
         return navigator
+    }
+
+    @Provides
+    fun provideTrainingFragment(trainingComponent: TrainingComponent): TrainingFragment {
+        return TrainingFragment().apply { component = trainingComponent }
+    }
+
+    @Provides
+    fun provideHomeFragment(homeComponent: HomeComponent): HomeFragment {
+        return HomeFragment().apply { component = homeComponent }
     }
 
 }
