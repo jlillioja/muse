@@ -25,10 +25,9 @@ class Navigator: NavigationProvider, NavigationController {
 }
 
 enum class NavigationAction {
-    ENTRY_LIST,
-    CREATE_ENTRY,
-    TYPE_AND_FEELING_TAG_SELECTOR,
-    WHO_AND_WHERE_TAG_SELECTOR,
-    PRIORITY_SELECTOR,
-    SEND_ENTRY
+    TRAINING,
+    HOME,
+    SML,
+    CONTINUUM,
+    LOG
 }
