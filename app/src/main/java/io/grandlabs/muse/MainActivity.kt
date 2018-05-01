@@ -19,6 +19,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject lateinit var trainingFragment: TrainingFragment
     @Inject lateinit var homeFragment: HomeFragment
+    @Inject lateinit var smlFragment: SMLFragment
+    @Inject lateinit var continuumFragment: ContinuumFragment
+    @Inject lateinit var mealLogFragment: MealLogFragment
 
     private val shouldShowTrainingKey = "SHOULD_SHOW_TRAINING"
 
@@ -55,14 +58,16 @@ class MainActivity : AppCompatActivity() {
                     replace(frameLayoutId, trainingFragment)
                 }
                 HOME -> {
-//                    addOrShow(frameLayoutId, homeFragment)
                     replace(frameLayoutId, homeFragment)
                 }
                 SML -> {
+                    replace(frameLayoutId, smlFragment)
                 }
                 CONTINUUM -> {
+                    replace(frameLayoutId, continuumFragment)
                 }
                 LOG -> {
+                    replace(frameLayoutId, mealLogFragment)
                 }
             }
 
