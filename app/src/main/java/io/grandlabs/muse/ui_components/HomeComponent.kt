@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.LinearLayout
 import io.grandlabs.muse.*
 import org.jetbrains.anko.*
+import org.jetbrains.anko.custom.style
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import javax.inject.Inject
 
@@ -20,6 +21,15 @@ class HomeComponent @Inject constructor(
             textView {
                 gravity = Gravity.CENTER
                 text = "Home"
+            }.lparams(matchParent, wrapContent)
+
+            horizontalProgressBar(theme = R.style.MuseProgressBar) {
+//            horizontalProgressBar {
+//                this.isIndeterminate = false
+                this.progress = 50
+//                padding = 100
+//                scaleY = 5f
+//                this.scrollBarSize = 500
             }.lparams(matchParent, wrapContent)
 
             button {

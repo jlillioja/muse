@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
 
         if (defaultSharedPreferences.getBoolean(shouldShowTrainingKey, true)) {
             navigateTo(TRAINING)
+            defaultSharedPreferences.edit().putBoolean(shouldShowTrainingKey, false).apply()
         } else {
             navigateTo(HOME)
         }
