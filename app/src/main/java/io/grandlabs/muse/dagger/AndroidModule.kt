@@ -1,6 +1,7 @@
 package io.grandlabs.muse.dagger
 
 import android.app.Application
+import android.content.Context
 import android.media.projection.MediaProjection
 import dagger.Module
 import dagger.Provides
@@ -64,6 +65,11 @@ class AndroidModule(private val application: Application) {
     @Provides
     fun provideMealLogProvider(mealManager: MealManager): MealLogProvider {
         return mealManager
+    }
+
+    @Provides
+    fun provideContext(): Context {
+        return application
     }
 
 }
