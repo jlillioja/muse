@@ -6,4 +6,5 @@
 
     <color name="buttonUnselectedColor">#E0933C</color>
     <color name="buttonSelectedColor">#B36D26</color>
+    <color name="saveButton">#3a89df</color>
 </resources>
