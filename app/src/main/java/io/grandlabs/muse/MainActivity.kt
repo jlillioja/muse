@@ -40,12 +40,12 @@ class MainActivity : AppCompatActivity() {
             navigateTo(it)
         }
 
-//        if (defaultSharedPreferences.getBoolean(shouldShowTrainingKey, true)) {
+        if (defaultSharedPreferences.getBoolean(shouldShowTrainingKey, true)) {
             navigateTo(TRAINING)
-//            defaultSharedPreferences.edit().putBoolean(shouldShowTrainingKey, false).apply()
-//        } else {
-//            navigateTo(HOME)
-//        }
+            defaultSharedPreferences.edit().putBoolean(shouldShowTrainingKey, false).apply()
+        } else {
+            navigateTo(HOME)
+        }
         
         frameLayout { 
             id = frameLayoutId

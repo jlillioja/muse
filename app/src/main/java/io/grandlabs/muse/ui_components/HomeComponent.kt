@@ -1,10 +1,20 @@
 package io.grandlabs.muse.ui_components
 
+import android.graphics.Color
+import android.support.constraint.ConstraintLayout.LayoutParams.PARENT_ID
+import android.support.v4.content.res.ResourcesCompat
 import android.view.Gravity
 import android.view.View
+import android.view.View.generateViewId
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import io.grandlabs.muse.*
 import org.jetbrains.anko.*
+import org.jetbrains.anko.constraint.layout.ConstraintSetBuilder
+import org.jetbrains.anko.constraint.layout.ConstraintSetBuilder.Side.*
+import org.jetbrains.anko.constraint.layout.applyConstraintSet
+import org.jetbrains.anko.constraint.layout.constraintLayout
 import org.jetbrains.anko.custom.style
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import javax.inject.Inject
@@ -13,52 +23,93 @@ class HomeComponent @Inject constructor(
         private val navigationController: NavigationController,
         private val navigationProvider: NavigationProvider
 ): AnkoComponent<MuseFragment> {
+
+    private lateinit var navBar: ImageView
+    private lateinit var progressFrame: ImageView
+    private lateinit var progressText: TextView
+    private lateinit var miaMessageBox: ImageView
+    private lateinit var miaMessage: TextView
+
     override fun createView(ui: AnkoContext<MuseFragment>): View = with(ui) {
-        linearLayout {
-            orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER
+        constraintLayout {
+            backgroundDrawable = resources.getDrawable(R.drawable.home_bg)
 
-            textView {
+            navBar = imageView(R.drawable.nav) {
+                id = generateViewId()
+            }
+
+            progressFrame = imageView(R.drawable.progress_foreground) {
+                id = generateViewId()
+                backgroundDrawable = resources.getDrawable(R.drawable.progress_background)
+            }
+
+            progressText = textView("Mia is\nlearning") {
+                id = generateViewId()
+                typeface = ResourcesCompat.getFont(ui.ctx, R.font.source_sans_pro_regular)
+                textSize = 37f
+                textColor = Color.rgb(110, 66, 12)
                 gravity = Gravity.CENTER
-                text = "Home"
-            }.lparams(matchParent, wrapContent)
+            }
 
-            horizontalProgressBar(theme = R.style.MuseProgressBar) {
-//            horizontalProgressBar {
-//                this.isIndeterminate = false
-                this.progress = 50
-//                padding = 100
-//                scaleY = 5f
-//                this.scrollBarSize = 500
-            }.lparams(matchParent, wrapContent)
-
-            button {
-                text = "TRAINING"
+            miaMessageBox = imageView(R.drawable.mia_message_box) {
+                id = generateViewId()
                 onClick {
                     navigationController.navigateTo(NavigationAction.TRAINING)
                 }
-            }.lparams(matchParent, wrapContent)
+            }
 
-            button {
-                text = "LOG MEAL (SML)"
-                onClick {
-                    navigationController.navigateTo(NavigationAction.SML)
-                }
-            }.lparams(matchParent, wrapContent)
+            miaMessage = textView("Are you learning too? Click here to review how we work together.") {
+                id = generateViewId()
+                typeface = ResourcesCompat.getFont(ui.ctx, R.font.source_sans_pro_regular)
+                textSize = 18f
+                textColor = Color.rgb(110, 66, 12)
+//                background = resources.getDrawable(R.drawable.text_background)
 
-            button {
-                text = "LOG MEAL (CONTINUUM)"
-                onClick {
-                    navigationController.navigateTo(NavigationAction.CONTINUUM)
-                }
-            }.lparams(matchParent, wrapContent)
+                gravity = Gravity.CENTER_VERTICAL
+            }
 
-            button {
-                text = "MEAL LOG"
-                onClick {
-                    navigationController.navigateTo(NavigationAction.LOG)
+            applyConstraintSet {
+                navBar {
+                    connect(
+                            LEFT to LEFT of PARENT_ID,
+                            RIGHT to RIGHT of PARENT_ID,
+                            BOTTOM to BOTTOM of PARENT_ID
+                    )
                 }
-            }.lparams(matchParent, wrapContent)
+
+                progressFrame {
+                    connect(
+                            TOP to TOP of PARENT_ID margin dip(106),
+                            LEFT to LEFT of PARENT_ID,
+                            RIGHT to RIGHT of PARENT_ID
+                    )
+                }
+
+                progressText {
+                    connect(
+                            TOP to TOP of progressFrame,
+                            LEFT to LEFT of progressFrame,
+                            RIGHT to RIGHT of progressFrame,
+                            BOTTOM to BOTTOM of progressFrame
+                    )
+                }
+
+                miaMessageBox {
+                    connect(
+                            TOP to TOP of PARENT_ID margin dip(358),
+                            LEFT to LEFT of PARENT_ID,
+                            RIGHT to RIGHT of PARENT_ID
+                    )
+                }
+
+                miaMessage {
+                    connect(
+                            TOP to TOP of PARENT_ID margin dip(436),
+                            LEFT to LEFT of PARENT_ID margin dip(36),
+                            RIGHT to RIGHT of PARENT_ID margin dip(36)
+                    )
+                }
+            }
         }
     }
 }
