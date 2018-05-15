@@ -7,6 +7,8 @@ import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import io.grandlabs.muse.NavigationAction.*
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.frameLayout
@@ -40,12 +42,12 @@ class MainActivity : AppCompatActivity() {
             navigateTo(it)
         }
 
-        if (defaultSharedPreferences.getBoolean(shouldShowTrainingKey, true)) {
+//        if (defaultSharedPreferences.getBoolean(shouldShowTrainingKey, true)) {
             navigateTo(TRAINING)
-            defaultSharedPreferences.edit().putBoolean(shouldShowTrainingKey, false).apply()
-        } else {
-            navigateTo(HOME)
-        }
+//            defaultSharedPreferences.edit().putBoolean(shouldShowTrainingKey, false).apply()
+//        } else {
+//            navigateTo(HOME)
+//        }
         
         frameLayout { 
             id = frameLayoutId

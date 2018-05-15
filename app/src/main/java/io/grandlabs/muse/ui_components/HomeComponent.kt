@@ -15,6 +15,7 @@ import org.jetbrains.anko.constraint.layout.ConstraintSetBuilder
 import org.jetbrains.anko.constraint.layout.ConstraintSetBuilder.Side.*
 import org.jetbrains.anko.constraint.layout.applyConstraintSet
 import org.jetbrains.anko.constraint.layout.constraintLayout
+import org.jetbrains.anko.constraint.layout.matchConstraint
 import org.jetbrains.anko.custom.style
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import javax.inject.Inject
@@ -36,7 +37,8 @@ class HomeComponent @Inject constructor(
 
             navBar = imageView(R.drawable.nav) {
                 id = generateViewId()
-            }
+                this.adjustViewBounds = false
+            }.lparams(matchConstraint, wrapContent)
 
             progressFrame = imageView(R.drawable.progress_foreground) {
                 id = generateViewId()
@@ -66,7 +68,7 @@ class HomeComponent @Inject constructor(
 //                background = resources.getDrawable(R.drawable.text_background)
 
                 gravity = Gravity.CENTER_VERTICAL
-            }
+            }.lparams(matchConstraint, wrapContent)
 
             applyConstraintSet {
                 navBar {
@@ -104,9 +106,9 @@ class HomeComponent @Inject constructor(
 
                 miaMessage {
                     connect(
-                            TOP to TOP of PARENT_ID margin dip(436),
-                            LEFT to LEFT of PARENT_ID margin dip(36),
-                            RIGHT to RIGHT of PARENT_ID margin dip(36)
+                            BOTTOM to BOTTOM of miaMessageBox margin dip(20),
+                            LEFT to LEFT of miaMessageBox margin dip(15),
+                            RIGHT to RIGHT of miaMessageBox margin dip(15)
                     )
                 }
             }

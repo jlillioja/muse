@@ -17,10 +17,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.Space
 import android.widget.TextView
-import io.grandlabs.muse.MuseFragment
-import io.grandlabs.muse.NavigationAction
-import io.grandlabs.muse.NavigationController
-import io.grandlabs.muse.R
+import io.grandlabs.muse.*
 import org.jetbrains.anko.*
 import org.jetbrains.anko.constraint.layout.ConstraintSetBuilder.Side.*
 import org.jetbrains.anko.constraint.layout.applyConstraintSet
@@ -36,6 +33,7 @@ class TrainingComponent
 ) : AnkoComponent<MuseFragment> {
 
     private val numberOfTrainingStates = 20
+    private val configDependentStates = 9..14
 
     private lateinit var constraintLayout: ConstraintLayout
     private lateinit var backButton: Button
@@ -126,7 +124,7 @@ class TrainingComponent
                 onClick {
                     moveToTrainingState(trainingState + 1)
                 }
-            }
+            }.lparams(dip(54), dip(54))
 
             homeIcon = imageView(R.drawable.icon_home) {
                 id = generateViewId()
@@ -176,7 +174,7 @@ class TrainingComponent
             defaultConstraints = applyConstraintSet {
                 titleText {
                     connect(
-                            TOP to TOP of PARENT_ID margin dip(250),
+                            TOP to TOP of PARENT_ID margin dip(276),
                             LEFT to LEFT of PARENT_ID margin dip(20),
                             RIGHT to RIGHT of PARENT_ID margin dip(20)
                     )
@@ -208,7 +206,7 @@ class TrainingComponent
                 saveButton {
                     connect(
                             RIGHT to RIGHT of PARENT_ID margin dip(16),
-                            BOTTOM to BOTTOM of PARENT_ID margin dip(40)
+                            BOTTOM to BOTTOM of PARENT_ID margin dip(20)
                     )
                 }
 
@@ -222,12 +220,12 @@ class TrainingComponent
                 mealIcon {
                     connect(LEFT to LEFT of PARENT_ID,
                             RIGHT to RIGHT of PARENT_ID,
-                            BOTTOM to BOTTOM of PARENT_ID margin dip(51))
+                            BOTTOM to BOTTOM of PARENT_ID margin dip(15))
                 }
 
                 homeIcon {
                     connect(LEFT to LEFT of PARENT_ID margin dip(34),
-                            BOTTOM to BOTTOM of PARENT_ID margin dip(51))
+                            BOTTOM to BOTTOM of PARENT_ID margin dip(15))
                 }
 
                 progressCircle {
@@ -270,7 +268,16 @@ class TrainingComponent
             star5.visibility = GONE
             defaultConstraints.applyTo(constraintLayout)
 
+            if (trainingState == 1) {
+                backButton.visibility = GONE
 
+                constraintLayout.applyConstraintSet {
+                    nextButton {
+                        connect(LEFT to LEFT of PARENT_ID,
+                                RIGHT to RIGHT of PARENT_ID)
+                    }
+                }
+            }
             if (trainingState == 8) {
                 nextButton.visibility = GONE
                 miaLeftAndDown.visibility = VISIBLE
@@ -288,35 +295,65 @@ class TrainingComponent
                     }
                 }
             }
-            if ((trainingState == 13) or (trainingState == 14)) {
+            if ((trainingState in 9..12) and Build.isContinuum) {
                 constraintLayout.applyConstraintSet {
-                    backButton {
-                        connect(TOP to BOTTOM of textBottomSpace,
-                                LEFT to LEFT of PARENT_ID,
-                                RIGHT to LEFT of nextButton)
-                        verticalBias = 0f
-                    }
-
-                    nextButton {
-                        connect(TOP to BOTTOM of textBottomSpace,
-                                LEFT to RIGHT of backButton,
-                                RIGHT to RIGHT of PARENT_ID)
-                        verticalBias = 0f
+                    titleText {
+                        connect(TOP to TOP of PARENT_ID margin ctx.dip(115))
                     }
                 }
+            }
+            if ((trainingState == 13) or (trainingState == 14)) {
+                if (Build.isSml) {
+                    constraintLayout.applyConstraintSet {
+                        backButton {
+                            connect(TOP to BOTTOM of textBottomSpace,
+                                    LEFT to LEFT of PARENT_ID,
+                                    RIGHT to LEFT of nextButton)
+                            verticalBias = 0f
+                        }
 
-                if (trainingState == 14) {
-                    nextButton.visibility = GONE
-                    saveButton.visibility = VISIBLE
+                        nextButton {
+                            connect(TOP to BOTTOM of textBottomSpace,
+                                    LEFT to RIGHT of backButton,
+                                    RIGHT to RIGHT of PARENT_ID)
+                            verticalBias = 0f
+                        }
+                    }
+
+                    if (trainingState == 14) {
+                        nextButton.visibility = GONE
+                        saveButton.visibility = VISIBLE
+                    }
+                } else {
+                    constraintLayout.applyConstraintSet {
+                        backButton {
+                            connect(TOP to BOTTOM of textBottomSpace,
+                                    LEFT to LEFT of PARENT_ID,
+                                    RIGHT to LEFT of nextButton)
+                            verticalBias = 0f
+                        }
+
+                        nextButton {
+                            connect(TOP to BOTTOM of textBottomSpace,
+                                    LEFT to RIGHT of backButton,
+                                    RIGHT to RIGHT of PARENT_ID)
+                            verticalBias = 0f
+                        }
+                    }
+
+                    if (trainingState == 14) {
+                        nextButton.visibility = GONE
+                        saveButton.visibility = VISIBLE
+                    }
                 }
             }
             if (trainingState == 15) {
                 val starStartPosition = ctx.dip(-200).toFloat()
                 val starEndPosition = ctx.dip(210).toFloat()
 
-                progressCircle.visibility = VISIBLE
-                progressMeter.visibility = VISIBLE
-                progressMeter.alpha = 0f
+//                progressCircle.visibility = VISIBLE
+//                progressMeter.visibility = VISIBLE
+//                progressMeter.alpha = 0f
 
                 star1.visibility = VISIBLE
                 star1.translationY = starStartPosition
@@ -417,18 +454,18 @@ class TrainingComponent
                 val star5Animations = AnimatorSet()
                 star5Animations.playSequentially(star5slideAnimation, star5fadeAnimation)
                 star5Animations.start()
-
-                ObjectAnimator
-                        .ofFloat(progressMeter, View.ALPHA, 1f)
-                        .apply { startDelay = 1000 }
-                        .start()
+//
+//                ObjectAnimator
+//                        .ofFloat(progressMeter, View.ALPHA, 1f)
+//                        .apply { startDelay = 1000 }
+//                        .start()
 
                 constraintLayout.postDelayed({ moveToTrainingState(16) }, 2500)
             }
             if (trainingState == 16) {
                 constraintLayout.applyConstraintSet {
                     titleText {
-                        connect(TOP to TOP of PARENT_ID margin ctx.dip(363))
+                        connect(TOP to TOP of PARENT_ID margin ctx.dip(400))
                     }
 
                     backButton {
@@ -484,12 +521,12 @@ class TrainingComponent
         6 -> "When it’s time for a mealtime insulin dose, let me know if you’re eating about the same, or more, or less than usual for that time of day.\n\nFor example, is this your usual lunch, or are you eating a bit lighter than the last few days? "
         7 -> "If you are used to thinking about carbs, then tell me if today’s meal has fewer carbs , a similar amount of carbs, or more carbs than what you usually eat at this time of day."
         8 -> "You don’t have to worry about what anyone else would call a lot or a little—what matters is the way YOU usually eat, around that time.\n\n(For me,  breakfast is always after dusk. And it’s sometimes a few beetles; sometimes a hearty mole!)   \n\nTouch the icon at the bottom to tell me about meals."
-        9 -> "For a meal that’s about the same as what you usually eat at that time of day, use the middle button. "
-        10 -> "If you’re having less than usual, use the “smaller” button."
-        11 -> "If you’re eating a larger meal than usual for you, here’s your button."
-        12 -> "If you take insulin for snacks, log them with this snack button. If you don't take insulin for snacks, just ignore this button."
-        13 -> "Remember, this is all about YOU--if it’s what you usually eat it’s the middle button!\n"
-        14 -> "When you are done entering the meal, save it.\n"
+        9 -> if (Build.isSml) "For a meal that’s about the same as what you usually eat at that time of day, use the middle button. " else "For a meal that’s about the same as what you usually eat at that time of day, leave the fork in the middle."
+        10 -> if (Build.isSml) "If you’re having less than usual, use the “smaller” button." else "If you’re having less than usual, touch or slide the fork to the left. All the way over would be a really small snack..."
+        11 -> if (Build.isSml) "If you’re eating a larger meal than usual for you, here’s your button." else "...and slide in-between to estimate how much smaller this meal is than your usual."
+        12 -> if (Build.isSml) "If you take insulin for snacks, log them with this snack button. If you don't take insulin for snacks, just ignore this button." else "If you’re eating a larger meal than usual for you, slide to the right for about how much bigger."
+        13 -> if (Build.isSml) "Remember, this is all about YOU--if it’s what you usually eat it’s the middle button!\n" else "Remember, this is all about YOU--if it’s what you usually eat, slide to the middle!\n"
+        14 -> if (Build.isSml) "When you are done entering the meal, save it.\n" else "When you are done entering the meal, save it.\n"
         15 -> ""
         16 -> "We’ll earn stars each time you log a meal, as I learn more about how your body reacts to food and insulin doses. When the bucket's full, we’re ready to fly! Then I’ll start suggesting insulin doses that are unique to you.\n"
         17 -> "The meals you log will be listed here."
@@ -500,23 +537,22 @@ class TrainingComponent
 
     }
 
-
     private fun getBackgroundForTrainingState(trainingState: Int): Drawable? {
         return when (trainingState) {
-            1 -> ctx.resources.getDrawable(R.drawable.ob_1_0_bg)
-            2 -> ctx.resources.getDrawable(R.drawable.ob_2_0_bg)
-            3 -> ctx.resources.getDrawable(R.drawable.ob_3_0_bg)
-            4 -> ctx.resources.getDrawable(R.drawable.ob_4_0_bg)
-            5 -> ctx.resources.getDrawable(R.drawable.ob_5_0_bg)
-            6 -> ctx.resources.getDrawable(R.drawable.ob_6_0_bg)
-            7 -> ctx.resources.getDrawable(R.drawable.ob_7_0_bg)
-            8 -> ctx.resources.getDrawable(R.drawable.ob_9_0_bg)
-            9 -> ctx.resources.getDrawable(R.drawable.ob_100_a_bg)
-            10 -> ctx.resources.getDrawable(R.drawable.ob_101_a_bg)
-            11 -> ctx.resources.getDrawable(R.drawable.ob_102_a_bg)
-            12 -> ctx.resources.getDrawable(R.drawable.ob_103_a_bg)
-            13 -> ctx.resources.getDrawable(R.drawable.ob_110_a_bg)
-            14 -> ctx.resources.getDrawable(R.drawable.ob_120_a_bg)
+            1 -> ctx.resources.getDrawable(R.drawable.ob_10_bg)
+            2 -> ctx.resources.getDrawable(R.drawable.ob_20_bg)
+            3 -> ctx.resources.getDrawable(R.drawable.ob_30_bg)
+            4 -> ctx.resources.getDrawable(R.drawable.ob_40_bg)
+            5 -> ctx.resources.getDrawable(R.drawable.ob_50_bg)
+            6 -> ctx.resources.getDrawable(R.drawable.ob_60_bg)
+            7 -> ctx.resources.getDrawable(R.drawable.ob_70_bg)
+            8 -> ctx.resources.getDrawable(R.drawable.ob_90_bg)
+            9 -> if (Build.isSml) ctx.resources.getDrawable(R.drawable.ob_100_a_bg) else ctx.resources.getDrawable(R.drawable.ob_100_b_bg)
+            10 -> if (Build.isSml) ctx.resources.getDrawable(R.drawable.ob_101_a_bg) else ctx.resources.getDrawable(R.drawable.ob_101_b_bg)
+            11 -> if (Build.isSml) ctx.resources.getDrawable(R.drawable.ob_102_a_bg) else ctx.resources.getDrawable(R.drawable.ob_102_bg)
+            12 -> if (Build.isSml) ctx.resources.getDrawable(R.drawable.ob_103_a_bg) else ctx.resources.getDrawable(R.drawable.ob_103_b_bg)
+            13 -> if (Build.isSml) ctx.resources.getDrawable(R.drawable.ob_110_a_bg) else ctx.resources.getDrawable(R.drawable.ob_110_b_bg)
+            14 -> if (Build.isSml) ctx.resources.getDrawable(R.drawable.ob_120_a_bg) else ctx.resources.getDrawable(R.drawable.ob_120_b_bg)
             15 -> ctx.resources.getDrawable(R.drawable.ob_prob_anim_bg)
             16 -> ctx.resources.getDrawable(R.drawable.ob_150_bg)
             17 -> ctx.resources.getDrawable(R.drawable.ob_160_a_bg)
@@ -527,3 +563,4 @@ class TrainingComponent
         }
     }
 }
+
